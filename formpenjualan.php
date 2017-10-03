@@ -1084,15 +1084,23 @@ $(document).ready(function(){
           document.getElementById("kode_toko").value = $(this).attr('data-toko');
           $('#kode_toko').prop('disabled', true).trigger("chosen:updated");
 
-          $.post("ambil_order_penjualan.php",{no_faktur_order:$(this).attr('data-order')},function(data){
+    //PERINTAH UNUTK MEN CEK APAKAH STOK PROUDK MASIH ADA ATAU TIDAK MENCUKUPI
+    $.getJSON("cek_status_stok_ambil_order.php?no_faktur_order="+$(this).attr('data-order'), function(result){
+      if (result.status == 0) {
 
-          $("#modal_order").modal('hide');
+             $.post("ambil_order_penjualan.php",{no_faktur_order:$(this).attr('data-order')},function(data){
+
+               $("#modal_order").modal('hide');
 
             $.get("ambil_select_order.php",function(data){
               $("#select_order").html(data);
             });
 
           });//END ambil_order_penjualan.php
+
+
+
+        //PERHITUNGAN FORM PEMBAYARAN JAVASCRIPT 
 
           var total_perorder = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($(this).attr('data-total')))));
           if (total_perorder == '' ){
@@ -1233,6 +1241,45 @@ $(document).ready(function(){
     $("#OrderPenjualan").show();
     $("#btnOrder").hide();
     $("#btnOrderClose").show();
+
+
+     }//end if if (result.status == 0) {
+      else{
+                $("#nama_konsumen").val('');
+                $("#invoice_marketplace").val('');
+                $("#no_telpon_konsumen").val('');
+                $("#alamat_konsumen").val('');
+                $("#keterangan").val('');
+
+
+                $('#nama_konsumen').attr('readonly', false);
+                $('#invoice_marketplace').attr('readonly', false);
+                $('#no_telpon_konsumen').attr('readonly', false);
+                $('#alamat_konsumen').attr('readonly', false);
+                $('#keterangan').attr('readonly', false);
+                $('#kd_pelanggan').prop('disabled', false).trigger("chosen:updated");
+                $('#kode_toko').prop('disabled', false).trigger("chosen:updated");
+
+
+                $("#modal_order").modal('hide');
+
+              alert("Tidak Bisa Melakukan Order Penjualan, Ada Stok Produk Yang Habis");
+
+              $("#tbody-barang-jual").find("tr").remove();
+
+                $.each(result.barang, function(i, item) {
+
+                  var tr_barang = "<tr><td>"+ result.barang[i].kode_barang+"</td><td>"+ result.barang[i].nama_barang+"</td><td>"+ result.barang[i].jumlah_jual+"</td><td>"+ result.barang[i].stok+"</td></tr>"
+                    
+                  $("#tbody-barang-jual").prepend(tr_barang);
+
+             });
+
+             $("#modal_barang_tidak_bisa_dijual").modal('show');
+
+      }
+
+  }); // END cek_status_stok_penjualan.php
 
 });
 </script>
@@ -2085,7 +2132,7 @@ alert("Silakan Bayar Piutang");
 //PERINTAH UNUTK MEN CEK APAKAH STOK PROUDK MASIH ADA ATAU TIDAK MENCUKUPI
     $.getJSON("cek_status_stok_penjualan.php?session_id="+session_id, function(result){
       if (result.status == 0) {
-
+        console.log(result.status);
          $.post("proses_bayar_jual.php",{total2:total2,session_id:session_id,no_faktur:no_faktur,sisa_pembayaran:sisa_pembayaran,kredit:kredit,kode_pelanggan:kode_pelanggan,tanggal_jt:tanggal_jt,total:total,potongan:potongan,potongan_persen:potongan_persen,tax:tax,cara_bayar:cara_bayar,pembayaran:pembayaran,sisa:sisa,sisa_kredit:sisa_kredit,total_hpp:total_hpp,harga:harga,sales:sales,kode_gudang:kode_gudang,invoice_marketplace:invoice_marketplace,nama_konsumen:nama_konsumen,no_telpon_konsumen:no_telpon_konsumen,alamat_konsumen:alamat_konsumen,kode_ekspedisi:kode_ekspedisi,kode_toko:kode_toko,keterangan:keterangan,ber_stok:ber_stok,ppn_input:ppn_input,ongkir:ongkir},function(info) {
 
 

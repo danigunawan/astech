@@ -929,7 +929,7 @@ $.post("barcode_order.php",{kode_barang:kode_barang,sales:sales,level_harga:leve
     var jumlah_barang = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#jumlah_barang").val()))));
     var level_harga = $("#level_harga").val();
     var harga = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#harga_produk").val()))));
-
+    var ber_stok = $("#ber_stok").val();
     var potongan = $("#potongan1").val();
     
     if (potongan == ''){
@@ -1011,7 +1011,7 @@ if (harga == 0) {
     if (pesan_alert == true) {
            $("#total2").val(tandaPemisahTitik(total_akhir));
 
-          $.post("proses_tbs_order_penjualan.php",{no_faktur:no_faktur,kode_barang:kode_barang,nama_barang:nama_barang,jumlah_barang:jumlah_barang,harga:harga,potongan:potongan,tax:tax,satuan:satuan,sales:sales},function(data){
+          $.post("proses_tbs_order_penjualan.php",{no_faktur:no_faktur,kode_barang:kode_barang,nama_barang:nama_barang,jumlah_barang:jumlah_barang,harga:harga,potongan:potongan,tax:tax,satuan:satuan,sales:sales,ber_stok:ber_stok},function(data){
 
 
 
@@ -1046,7 +1046,7 @@ if (harga == 0) {
 else{
           $("#total2").val(tandaPemisahTitik(total_akhir));
 
-          $.post("proses_tbs_order_penjualan.php",{no_faktur:no_faktur,kode_barang:kode_barang,nama_barang:nama_barang,jumlah_barang:jumlah_barang,harga:harga,potongan:potongan,tax:tax,satuan:satuan,sales:sales},function(data){
+          $.post("proses_tbs_order_penjualan.php",{no_faktur:no_faktur,kode_barang:kode_barang,nama_barang:nama_barang,jumlah_barang:jumlah_barang,harga:harga,potongan:potongan,tax:tax,satuan:satuan,sales:sales,ber_stok:ber_stok},function(data){
 
 
 
@@ -1069,12 +1069,6 @@ else{
 }
 
 }
-  else if (stok < 0) {
-
-    alert ("Jumlah Melebihi Stok Barang !");
-
-  }
-
   else{
 
     if (harga == 0) {
@@ -1083,7 +1077,7 @@ else{
     if (pesan_alert == true) {
         $("#total2").val(tandaPemisahTitik(total_akhir));
 
-    $.post("proses_tbs_order_penjualan.php",{no_faktur:no_faktur,kode_barang:kode_barang,nama_barang:nama_barang,jumlah_barang:jumlah_barang,harga:harga,potongan:potongan,tax:tax,satuan:satuan,sales:sales},function(data){
+    $.post("proses_tbs_order_penjualan.php",{no_faktur:no_faktur,kode_barang:kode_barang,nama_barang:nama_barang,jumlah_barang:jumlah_barang,harga:harga,potongan:potongan,tax:tax,satuan:satuan,sales:sales,ber_stok:ber_stok},function(data){
 
 
      $("#ppn").attr("disabled", true);
@@ -1115,7 +1109,7 @@ else{
 
 else{
   $("#total2").val(tandaPemisahTitik(total_akhir));
-     $.post("proses_tbs_order_penjualan.php",{no_faktur:no_faktur,kode_barang:kode_barang,nama_barang:nama_barang,jumlah_barang:jumlah_barang,harga:harga,potongan:potongan,tax:tax,satuan:satuan,sales:sales},function(data){
+     $.post("proses_tbs_order_penjualan.php",{no_faktur:no_faktur,kode_barang:kode_barang,nama_barang:nama_barang,jumlah_barang:jumlah_barang,harga:harga,potongan:potongan,tax:tax,satuan:satuan,sales:sales,ber_stok:ber_stok},function(data){
 
 
           $("#ppn").attr("disabled", true);
@@ -1344,22 +1338,6 @@ $("#cari_produk_penjualan").click(function(){
      var stok = jumlahbarang - jumlah_barang;
 
 
-
-if (stok < 0 )
-
-  {
-
-       if (ber_stok == 'Jasa') {
-
-       }
-
-       else{
-       alert ("Jumlah Melebihi Stok!");
-       $("#jumlah_barang").val('');
-       }
-
-
-    }
 
 
     else if( limit_stok > stok  )

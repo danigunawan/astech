@@ -111,13 +111,7 @@ $stok_barang = $ambil_sisa['jumlah_barang'] - $jumlah_barang;
 
 
 if ($ber_stok == 'Barang' OR $ber_stok == 'barang') {
-    
-    if ($stok_barang <= 0 ) {
-      
-    }
 
-    else{
-    
 
       $a = $harga * $jumlah_barang;
     // display the cached array
@@ -216,12 +210,12 @@ $jumlah = mysqli_num_rows($cek);
     }
     else
     {
-            $perintah = $db->prepare("INSERT INTO tbs_penjualan_order (session_id,kode_barang,nama_barang,jumlah_barang,satuan,harga,subtotal,tanggal,jam) VALUES (?,?,
-            ?,?,?,?,?,?,?)");
+            $perintah = $db->prepare("INSERT INTO tbs_penjualan_order (session_id,kode_barang,nama_barang,jumlah_barang,satuan,harga,subtotal,tanggal,jam,tipe_barang) VALUES (?,?,
+            ?,?,?,?,?,?,?,?)");
             
             
-            $perintah->bind_param("sssisiiss",
-            $session_id, $kode_barang, $nama_barang, $jumlah_barang, $satuan, $harga, $a,$tanggal_sekarang,$jam_sekarang);
+            $perintah->bind_param("sssisiisss",
+            $session_id, $kode_barang, $nama_barang, $jumlah_barang, $satuan, $harga, $a,$tanggal_sekarang,$jam_sekarang,$ber_stok);
            
             
             
@@ -230,7 +224,6 @@ $jumlah = mysqli_num_rows($cek);
     }
 
 
-    } // END ELSE dari IF ($stok_barang < 0) {
 
 } // END berkaitan dgn stok == Barang
 
@@ -334,12 +327,12 @@ $jumlah = mysqli_num_rows($cek);
     }
     else
     {
-            $perintah = $db->prepare("INSERT INTO tbs_penjualan_order (session_id,kode_barang,nama_barang,jumlah_barang,satuan,harga,subtotal,tanggal,jam) VALUES (?,?,
-            ?,?,?,?,?,?,?)");
+            $perintah = $db->prepare("INSERT INTO tbs_penjualan_order (session_id,kode_barang,nama_barang,jumlah_barang,satuan,harga,subtotal,tanggal,jam,tipe_barang) VALUES (?,?,
+            ?,?,?,?,?,?,?,?)");
             
             
-            $perintah->bind_param("sssisiiss",
-            $session_id, $kode_barang, $nama_barang, $jumlah_barang, $satuan, $harga, $a,$tanggal_sekarang,$jam_sekarang);
+            $perintah->bind_param("sssisiisss",
+            $session_id, $kode_barang, $nama_barang, $jumlah_barang, $satuan, $harga, $a,$tanggal_sekarang,$jam_sekarang,$ber_stok);
            
             
             

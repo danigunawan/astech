@@ -363,6 +363,46 @@ $otoritas_kolom = mysqli_fetch_array($pilih_akses_kolom);
   </div>
 </div><!-- END MODAL ORDER -->
 
+
+
+<!-- MODAL PRODUK STOK HABIS -->
+<div id="modal_barang_tidak_bisa_dijual" class="modal " role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Produk Yang Tidak Bisa Di Jual</h4>
+      </div>
+      <div class="modal-body">
+            <center>
+            <table class="table table-bordered table-sm">
+                  <thead> <!-- untuk memberikan nama pada kolom tabel -->
+
+                      <th style='background-color: #4CAF50; color: white;'>Kode Produk</th>
+                      <th style='background-color: #4CAF50; color: white;'>Nama Produk</th>
+                      <th style='background-color: #4CAF50; color: white;'>Jumlah Yang Akan Di Jual</th>
+                      <th style='background-color: #4CAF50; color: white;'>Stok Saat Ini</th>
+                  
+                  
+                  </thead> <!-- tag penutup tabel -->
+                  <tbody id="tbody-barang-jual">
+                    
+                  </tbody>
+            </table>
+            </center>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div><!-- END OF MODAL PRODUK STOK HABIS  -->
+
+
 <!-- Modal edit data -->
 <div id="modal_edit" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -1137,6 +1177,10 @@ $.post("cek_level_harga_barang.php",
 
     var no_faktur = $("#nomor_faktur_penjualan").val();
 
+    //PERINTAH UNUTK MEN CEK APAKAH STOK PROUDK MASIH ADA ATAU TIDAK MENCUKUPI
+    $.getJSON("cek_status_stok_ambil_order.php?no_faktur_order="+$(this).attr('data-order'), function(result){
+      if (result.status == 0) {
+
     $.post("ambil_order_edit_penjualan.php",{no_faktur_order:$(this).attr('data-order'), no_faktur:no_faktur},function(data){
 
       $("#modal_order").modal('hide');
@@ -1290,6 +1334,28 @@ $.post("cek_level_harga_barang.php",
       else{    
           $("#potongan_penjualan").val(potongaaan);
         }
+
+  }//end if if (result.status == 0) {
+  else{
+                $("#modal_order").modal('hide');
+
+              alert("Tidak Bisa Melakukan Order Penjualan, Ada Stok Produk Yang Habis");
+
+              $("#tbody-barang-jual").find("tr").remove();
+
+                $.each(result.barang, function(i, item) {
+
+                  var tr_barang = "<tr><td>"+ result.barang[i].kode_barang+"</td><td>"+ result.barang[i].nama_barang+"</td><td>"+ result.barang[i].jumlah_jual+"</td><td>"+ result.barang[i].stok+"</td></tr>"
+                    
+                  $("#tbody-barang-jual").prepend(tr_barang);
+
+             });
+
+             $("#modal_barang_tidak_bisa_dijual").modal('show');
+
+      }
+
+  }); // END cek_status_stok_penjualan.php
 
 });
 </script>

@@ -15,6 +15,7 @@ $otoritas_tombol = mysqli_fetch_array($pilih_akses_tombol);
     $jumlah_barang = angkadoang($_POST['jumlah_barang']);
     $nama_barang = stringdoang($_POST['nama_barang']);
     $sales = stringdoang($_POST['sales']);
+    $ber_stok = stringdoang($_POST['ber_stok']);
     $user = $_SESSION['nama'];
     $potongan = stringdoang($_POST['potongan']);
     $a = $harga * $jumlah_barang;
@@ -143,12 +144,12 @@ $jumlah = mysqli_num_rows($cek);
     }
     else
     {
-            $perintah = $db->prepare("INSERT INTO tbs_penjualan_order (session_id,kode_barang,nama_barang,jumlah_barang,satuan,harga,subtotal,potongan,tax,tanggal,jam) VALUES (?,?,
-            ?,?,?,?,?,?,?,?,?)");
+            $perintah = $db->prepare("INSERT INTO tbs_penjualan_order (session_id,kode_barang,nama_barang,jumlah_barang,satuan,harga,subtotal,potongan,tax,tanggal,jam,tipe_barang) VALUES (?,?,
+            ?,?,?,?,?,?,?,?,?,?)");
             
             
-            $perintah->bind_param("sssisiiisss",
-            $session_id, $kode_barang, $nama_barang, $jumlah_barang, $satuan, $harga, $subtotal, $potongan_tampil, $tax_persen,$tanggal_sekarang,$jam_sekarang);
+            $perintah->bind_param("sssisiiissss",
+            $session_id, $kode_barang, $nama_barang, $jumlah_barang, $satuan, $harga, $subtotal, $potongan_tampil, $tax_persen,$tanggal_sekarang,$jam_sekarang,$ber_stok);
             
             
             $kode_barang = stringdoang($_POST['kode_barang']);

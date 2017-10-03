@@ -19,7 +19,7 @@ $waktu = $data_select_detail['tanggal']." ".$data_select_detail['jam'];
 if ($data_select_detail['satuan'] == $data_select_detail['asal_satuan']) {
 	
 	//INSERT DARI DETAIL PENJUALAN ORDER KE TBS PENJUALAN
-		$insert_tbs_penjualan = "INSERT INTO tbs_penjualan (session_id, kode_barang, nama_barang, jumlah_barang, satuan, harga, subtotal, potongan, tax, waktu, no_faktur_order) SELECT '$session_id', kode_barang, nama_barang, jumlah_barang, satuan, harga, subtotal, potongan, tax, '$waktu', '$no_faktur' FROM detail_penjualan_order WHERE no_faktur_order = '$no_faktur' ";
+		$insert_tbs_penjualan = "INSERT INTO tbs_penjualan (session_id, kode_barang, nama_barang, jumlah_barang, satuan, harga, subtotal, potongan, tax, waktu, no_faktur_order,tipe_barang) SELECT '$session_id', kode_barang, nama_barang, jumlah_barang, satuan, harga, subtotal, potongan, tax, '$waktu', '$no_faktur',tipe_barang FROM detail_penjualan_order WHERE no_faktur_order = '$no_faktur' ";
 
 		if ($db->query($insert_tbs_penjualan) === TRUE) {
 
@@ -40,7 +40,7 @@ else{
 	$harga = $data['harga'] * $data['jumlah_barang'];
 
 	//INSERT DARI DETAIL PENJUALAN ORDER KE TBS PENJUALAN
-		$insert_tbs_penjualan = "INSERT INTO tbs_penjualan (session_id, kode_barang, nama_barang, jumlah_barang, satuan, harga, subtotal, potongan, tax, tanggal, jam, no_faktur_order) SELECT '$session_id', kode_barang, nama_barang, '$jumlah_produk', satuan, '$harga', subtotal, potongan, tax, tanggal, jam, '$no_faktur' FROM detail_penjualan_order WHERE no_faktur_order = '$no_faktur' ";
+		$insert_tbs_penjualan = "INSERT INTO tbs_penjualan (session_id, kode_barang, nama_barang, jumlah_barang, satuan, harga, subtotal, potongan, tax, tanggal, jam, no_faktur_order,tipe_barang) SELECT '$session_id', kode_barang, nama_barang, '$jumlah_produk', satuan, '$harga', subtotal, potongan, tax, tanggal, jam, '$no_faktur',tipe_barang FROM detail_penjualan_order WHERE no_faktur_order = '$no_faktur' ";
 
 		if ($db->query($insert_tbs_penjualan) === TRUE) {
 
