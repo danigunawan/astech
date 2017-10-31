@@ -842,7 +842,8 @@ tr:nth-child(even){background-color: #f2f2f2}
           
           <!-- memasukan teks pada kolom kode pelanggan, dan nomor faktur penjualan namun disembunyikan -->
 
-          
+        <input type="hidden" name="id_order" id="id_order" class="form-control" >
+
           <input type="hidden" name="kode_pelanggan" id="k_pelanggan" class="form-control" required="" >
           <input type="hidden" name="ppn_input" id="ppn_input" value="Include" class="form-control" placeholder="ppn input">  
       
@@ -1032,6 +1033,7 @@ $(document).ready(function(){
                   "fnCreatedRow": function( nRow, aData, iDataIndex ) {
 
                     $(nRow).attr('class', "pilih_order");
+                   $(nRow).attr('id', "order-id-"+aData[14]);
                     $(nRow).attr('data-order', aData[0]);
                     $(nRow).attr('data-total', aData[7]);
                     $(nRow).attr('data-keterangan', aData[8]);
@@ -1040,6 +1042,7 @@ $(document).ready(function(){
                     $(nRow).attr('data-market', aData[11]);
                     $(nRow).attr('data-toko', aData[12]);
                     $(nRow).attr('data-telpon', aData[13]);
+                    $(nRow).attr('data-id', aData[14]);
                     $(nRow).attr('data-invoice', aData[1]); 
 
                 },
@@ -1084,14 +1087,16 @@ $(document).ready(function(){
           document.getElementById("kode_toko").value = $(this).attr('data-toko');
           $('#kode_toko').prop('disabled', true).trigger("chosen:updated");
 
+          document.getElementById("id_order").value = $(this).attr('data-id');
+
+
     //PERINTAH UNUTK MEN CEK APAKAH STOK PROUDK MASIH ADA ATAU TIDAK MENCUKUPI
     $.getJSON("cek_status_stok_ambil_order.php?no_faktur_order="+$(this).attr('data-order'), function(result){
-      if (result.status == 0) {
-
-             $.post("ambil_order_penjualan.php",{no_faktur_order:$(this).attr('data-order')},function(data){
-
-               $("#modal_order").modal('hide');
-
+                var id_order = $("#id_order").val();
+                var no_faktur_order = $("#order-id-"+id_order).attr('data-order');
+          if (result.status == 0) {
+             $.post("ambil_order_penjualan.php",{no_faktur_order:no_faktur_order},function(data){
+            $("#modal_order").modal('hide'); 
             $.get("ambil_select_order.php",function(data){
               $("#select_order").html(data);
             });
@@ -1102,7 +1107,7 @@ $(document).ready(function(){
 
         //PERHITUNGAN FORM PEMBAYARAN JAVASCRIPT 
 
-          var total_perorder = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($(this).attr('data-total')))));
+          var total_perorder = bersihPemisah(bersihPemisah(bersihPemisah(bersihPemisah($("#order-id-"+id_order).attr('data-total')))));
           if (total_perorder == '' ){
              total_perorder = 0;
           };
@@ -1180,6 +1185,7 @@ $(document).ready(function(){
               
               var total_akhir = parseInt(total_akhier) + parseInt(Math.round(hasil_tax));
 
+
           }//END pot_fakt_rp == 0
 
           else if(pot_fakt_rp != 0 && pot_fakt_per != 0){
@@ -1207,13 +1213,7 @@ $(document).ready(function(){
               //end hitung pajak
               var total_akhir = parseInt(total_akhier) + parseInt(Math.round(hasil_tax));
 
-
           }//pot_fakt_rp != 0 && pot_fakt_per != 0
-        
-
-            $("#tax_rp").val(hasil_tax);
-            $("#total1").val(tandaPemisahTitik(total_akhir));
-            $("#total2").val(tandaPemisahTitik(total_akhir1));
 
             if (pot_fakt_rp == 0){
                 $("#potongan_penjualan").val();
@@ -1222,7 +1222,7 @@ $(document).ready(function(){
                 $("#potongan_penjualan").val(potongaaan);
               }
 
-    $('#table_tbs_order').DataTable().destroy();
+         $('#table_tbs_order').DataTable().destroy();
           var dataTable = $('#table_tbs_order').DataTable( {
           "processing": true,
           "serverSide": true,
@@ -1238,9 +1238,13 @@ $(document).ready(function(){
         },      
     });
 
-    $("#OrderPenjualan").show();
-    $("#btnOrder").hide();
-    $("#btnOrderClose").show();
+         $("#tax_rp").val(hasil_tax);
+         $("#total1").val(tandaPemisahTitik(total_akhir));
+         $("#total2").val(tandaPemisahTitik(total_akhir1));
+
+          $("#OrderPenjualan").show();
+          $("#btnOrder").hide();
+          $("#btnOrderClose").show();
 
 
      }//end if if (result.status == 0) {
